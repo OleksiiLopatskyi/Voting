@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Voting.BAL.Contracts;
 using Voting.DAL.DTO;
 
-namespace Voting.Controllers
+namespace Voting.API.Controllers
 {
     [Route("api/models")]
     [ApiController]
