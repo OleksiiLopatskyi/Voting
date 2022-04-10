@@ -1,4 +1,4 @@
-namespace Voting
+namespace Voting.API
 {
     public class Program
     {

@@ -12,6 +12,7 @@ namespace Voting.DAL.Repository
     {
         private DatabaseContext _dataContext;
         private IModelRepository _modelRepository;
+        private IPairRepository _modelsPairRepository;
 
         public UnitOfWork(DatabaseContext databaseContext)
         {
@@ -24,6 +25,14 @@ namespace Voting.DAL.Repository
                     _modelRepository = new ModelRepository(_dataContext);
                 return _modelRepository;
             }
+        }
+        public IPairRepository ModelsPairRepository { 
+            get 
+            {
+                if(_modelsPairRepository==null)
+                    return new PairRepository(_dataContext);
+                return _modelsPairRepository;
+            } 
         }
 
         public async Task SaveAsync()

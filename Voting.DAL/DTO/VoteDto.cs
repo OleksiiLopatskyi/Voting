@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace Voting.DAL.DTO
 {
-    public class ModelDto
+    public class VoteDto
     {
-        public string Name { get; set; }
-        public IEnumerable<string> Images { get; set; }
+        public int PairId { get; set; }
+        public int WinnerId { get; set; }
     }
 }

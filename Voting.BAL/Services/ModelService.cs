@@ -42,7 +42,8 @@ namespace Voting.BAL.Services
         public async Task<Result> GetAllModels()
         {
             var models = await _unitOfWork.ModelRepository.FindAllAsync();
-            return new GenericResult<IEnumerable<Model>> { Data = models };
+
+            return new GenericResult<IEnumerable<Model>> { Data = models};
         }
 
         public async Task<Result> GetModelById(int id)

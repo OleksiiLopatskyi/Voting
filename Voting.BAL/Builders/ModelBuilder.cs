@@ -13,6 +13,7 @@ namespace Voting.BAL.Builders
         public ModelBuilder()
         {
             _model = new Model();
+            _model.Images = new List<Image>();
         }
         public Model Build()
         {
