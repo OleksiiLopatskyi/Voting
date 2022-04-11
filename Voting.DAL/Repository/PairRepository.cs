@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,6 +14,13 @@ namespace Voting.DAL.Repository
     {
         public PairRepository(DatabaseContext databaseContext) : base(databaseContext)
         {
+        }
+        public new async Task<IEnumerable<Pair>> FindAllAsync()
+        {
+            return await DataContext.ModelsPair
+                .Include(i=>i.FirstModel).ThenInclude(i=>i.Images)
+                .Include(i=>i.SecondModel).ThenInclude(i=>i.Images)
+                .ToListAsync();
         }
     }
 }
