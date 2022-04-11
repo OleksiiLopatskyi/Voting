@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using Voting.DAL.Context;
@@ -14,6 +15,13 @@ namespace Voting.DAL.Repository
     {
         public PairRepository(DatabaseContext databaseContext) : base(databaseContext)
         {
+        }
+        public new async Task<Pair> FindEntityAsync(Expression<Func<Pair, bool>> expression)
+        {
+            return await DataContext.Set<Pair>()
+                .Include(i=>i.FirstModel)
+                .Include(i=>i.SecondModel)
+                .FirstOrDefaultAsync(expression);
         }
         public new async Task<IEnumerable<Pair>> FindAllAsync()
         {

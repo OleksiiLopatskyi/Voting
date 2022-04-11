@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Voting.BAL.Contracts;
+using Voting.DAL.DTO;
 
 namespace Voting.API.Controllers
 {
@@ -24,6 +25,12 @@ namespace Voting.API.Controllers
         public async Task<IActionResult> CreatePairs()
         {
             var result = await _modelsPairService.CreateAsync();
+            return CustomResult(result);
+        }
+        [HttpPut]
+        public async Task<IActionResult> Vote(VoteDto dto)
+        {
+            var result = await _modelsPairService.VoteAsync(dto);
             return CustomResult(result);
         }
     }

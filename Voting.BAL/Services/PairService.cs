@@ -52,8 +52,8 @@ namespace Voting.BAL.Services
             try
             {
                 var pair = await _unitOfWork.ModelsPairRepository.FindEntityAsync(pair => pair.Id == dto.PairId);
-                var winner = pair.FirstModelId == dto.PairId ? pair.FirstModel : pair.SecondModel;
-                var loser = pair.FirstModelId == dto.PairId ? pair.SecondModel : pair.FirstModel;
+                var winner = pair.FirstModelId == dto.WinnerId ? pair.FirstModel : pair.SecondModel;
+                var loser = pair.FirstModelId == dto.WinnerId ? pair.SecondModel : pair.FirstModel;
                 winner.ShowTimes++;
                 winner.VotesCount++;
                 loser.ShowTimes++;
