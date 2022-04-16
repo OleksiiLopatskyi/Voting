@@ -11,8 +11,9 @@ namespace Voting.BAL.Contracts
 {
     public interface IPairService
     {
-        Task<Result> GetAllAsync();
+        Task<Result> GetNoVotedPairAsync();
         Task<Result> CreateAsync();
         Task<Result> VoteAsync(VoteDto dto);
+        Task<Result> DeleteAsync(int id);
     }
 }

@@ -18,12 +18,12 @@ namespace Voting.BAL.Services
         {
             _unitOfWork = unitOfWork;
         }
-        public async Task<Result> GetAllAsync()
+        public async Task<Result> GetNoVotedPairAsync()
         {
             try
             {
-                var pairs = await _unitOfWork.ModelsPairRepository.FindAllAsync();
-                return new GenericResult<IEnumerable<Pair>> { Data = pairs };
+                var pair = await _unitOfWork.ModelsPairRepository.FindEntityAsync(p => p.IsVoted == false); ;
+                return new GenericResult<Pair> { Data = pair };
             }
             catch (Exception ex)
             {
@@ -66,7 +66,7 @@ namespace Voting.BAL.Services
             }
             catch (Exception ex)
             {
-                return new Result { StatusCode =StatusCode.InternalServerError };
+                return new Result { StatusCode = StatusCode.InternalServerError };
             }
 
         }
@@ -93,6 +93,22 @@ namespace Voting.BAL.Services
                 }
             }
             return pairs;
+        }
+
+        public async Task<Result> DeleteAsync(int id)
+        {
+            try
+            {
+                var entity = await _unitOfWork.ModelsPairRepository.FindEntityAsync(i => i.Id == id);
+                _unitOfWork.ModelsPairRepository.Delete(entity);
+                await _unitOfWork.SaveAsync();
+                return new GenericResult<Pair> { Data = entity };
+            }
+            catch (Exception ex)
+            {
+                return new Result { StatusCode = StatusCode.InternalServerError };
+            }
+
         }
     }
 }

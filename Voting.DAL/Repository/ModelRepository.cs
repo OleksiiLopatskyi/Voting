@@ -17,6 +17,7 @@ namespace Voting.DAL.Repository
         {
            
         }
+
         public new async Task<IEnumerable<Model>> FindAllAsync()
         {
             return await DataContext.Models.Include(i=>i.Images).ToListAsync();

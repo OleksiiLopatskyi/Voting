@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,8 +14,8 @@ namespace Voting.BAL.Contracts
     {
         Task<Result> GetAllModels();
         Task<Result> GetModelById(int id);
-        Task<Result> Create(ModelDto model);
+        Task<Result> Create(IFormCollection form);
         Task<Result> Update(ModelDto model);
-        Task<Result> Delete(int id);
+        Task<Result> DeleteAsync(int id);
     }
 }

@@ -1,8 +1,10 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Voting.BAL.Extensions;
 using Voting.DAL.Entities;
 
 namespace Voting.BAL.Builders
@@ -13,7 +15,7 @@ namespace Voting.BAL.Builders
         public ModelBuilder()
         {
             _model = new Model();
-            _model.Images = new List<Image>();
+
         }
         public Model Build()
         {
@@ -22,6 +24,7 @@ namespace Voting.BAL.Builders
 
         public IModelBuilder WithImages(IEnumerable<string> images)
         {
+            _model.Images = new List<Image>();
             foreach (var url in images)
             {
                 var image = new Image { Url = url };
@@ -30,9 +33,9 @@ namespace Voting.BAL.Builders
             return this;
         }
 
-        public IModelBuilder WithName(string name)
+        public IModelBuilder Map(IFormCollection form)
         {
-            _model.Name = name;
+            _model = form.FormToDictionary().ToObject<Model>();
             return this;
         }
     }

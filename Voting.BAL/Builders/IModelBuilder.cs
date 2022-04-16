@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,7 +10,7 @@ namespace Voting.BAL.Builders
 {
     public interface IModelBuilder
     {
-        IModelBuilder WithName(string name);
+        IModelBuilder Map(IFormCollection form);
         IModelBuilder WithImages(IEnumerable<string> images);
         Model Build();
     }

@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using Voting.BAL.Contracts;
+using Voting.BAL.Models;
 using Voting.BAL.Services;
 using Voting.DAL.Context;
 using Voting.DAL.Contracts;
@@ -25,10 +26,12 @@ namespace Voting.API
             services.AddTransient<IModelService, ModelService>();
             services.AddTransient<IUnitOfWork, UnitOfWork>();
             services.AddTransient<IPairService, PairService>();
+            services.AddTransient<IFireBaseClient, FireBaseClient>();
+            services.Configure<FireBaseOptions>(Configuration.GetSection("FireBaseStorage"));
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "TueOrAction_API", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Voting", Version = "v1" });
             });
         }
 
@@ -45,6 +48,9 @@ namespace Voting.API
             app.UseHttpsRedirection();
 
             app.UseRouting();
+            app.UseCors(builder => builder.WithOrigins().AllowAnyOrigin()
+            .AllowAnyHeader()
+            .AllowAnyMethod());
 
             app.UseAuthorization();
 

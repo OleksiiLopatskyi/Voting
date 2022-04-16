@@ -5,7 +5,7 @@ using Voting.DAL.DTO;
 
 namespace Voting.API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/models")]
     [ApiController]
     public class ModelsController : CustomController
     {
@@ -20,10 +20,22 @@ namespace Voting.API.Controllers
             var result = await _modelService.GetAllModels();
             return CustomResult(result);
         }
-        [HttpPost]
-        public async Task<IActionResult> CreateModel(ModelDto model)
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetModel(int id)
         {
-            var result = await _modelService.Create(model);
+            var result = await _modelService.GetModelById(id);
+            return CustomResult(result);
+        }
+        [HttpPost]
+        public async Task<IActionResult> CreateModel(IFormCollection form)
+        {
+            var result = await _modelService.Create(form);
+            return CustomResult(result);
+        }
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var result = await _modelService.DeleteAsync(id);
             return CustomResult(result);
         }
     }
