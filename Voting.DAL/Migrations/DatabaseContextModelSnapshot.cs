@@ -38,19 +38,28 @@ namespace Voting.DAL.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("ProfileId")
-                        .HasColumnType("int");
-
                     b.Property<int>("RoleId")
                         .HasColumnType("int");
 
-                    b.HasKey("Id");
+                    b.Property<string>("Username")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
-                    b.HasIndex("ProfileId");
+                    b.HasKey("Id");
 
                     b.HasIndex("RoleId");
 
                     b.ToTable("Accounts");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Email = "admin@gmail.com",
+                            Password = "12345",
+                            RoleId = 1,
+                            Username = "admin"
+                        });
                 });
 
             modelBuilder.Entity("Voting.DAL.Entities.Image", b =>
@@ -106,14 +115,14 @@ namespace Voting.DAL.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
+                    b.Property<int?>("AccountId")
+                        .HasColumnType("int");
+
                     b.Property<int?>("FirstModelId")
                         .HasColumnType("int");
 
                     b.Property<bool>("IsVoted")
                         .HasColumnType("bit");
-
-                    b.Property<int>("ProfileId")
-                        .HasColumnType("int");
 
                     b.Property<int?>("SecondModelId")
                         .HasColumnType("int");
@@ -123,33 +132,13 @@ namespace Voting.DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("FirstModelId");
+                    b.HasIndex("AccountId");
 
-                    b.HasIndex("ProfileId");
+                    b.HasIndex("FirstModelId");
 
                     b.HasIndex("SecondModelId");
 
-                    b.ToTable("ModelsPair");
-                });
-
-            modelBuilder.Entity("Voting.DAL.Entities.Profile", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<int>("AccountId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Username")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Profile");
+                    b.ToTable("Pairs");
                 });
 
             modelBuilder.Entity("Voting.DAL.Entities.Role", b =>
@@ -160,9 +149,6 @@ namespace Voting.DAL.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<int>("AccountId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -170,23 +156,27 @@ namespace Voting.DAL.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Role");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Admin"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "User"
+                        });
                 });
 
             modelBuilder.Entity("Voting.DAL.Entities.Account", b =>
                 {
-                    b.HasOne("Voting.DAL.Entities.Profile", "Profile")
-                        .WithMany()
-                        .HasForeignKey("ProfileId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("Voting.DAL.Entities.Role", "Role")
-                        .WithMany()
+                        .WithMany("Accounts")
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Profile");
 
                     b.Navigation("Role");
                 });
@@ -200,15 +190,13 @@ namespace Voting.DAL.Migrations
 
             modelBuilder.Entity("Voting.DAL.Entities.Pair", b =>
                 {
+                    b.HasOne("Voting.DAL.Entities.Account", null)
+                        .WithMany("Pairs")
+                        .HasForeignKey("AccountId");
+
                     b.HasOne("Voting.DAL.Entities.Model", "FirstModel")
                         .WithMany()
                         .HasForeignKey("FirstModelId");
-
-                    b.HasOne("Voting.DAL.Entities.Profile", "Profile")
-                        .WithMany("Pairs")
-                        .HasForeignKey("ProfileId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
 
                     b.HasOne("Voting.DAL.Entities.Model", "SecondModel")
                         .WithMany()
@@ -216,9 +204,12 @@ namespace Voting.DAL.Migrations
 
                     b.Navigation("FirstModel");
 
-                    b.Navigation("Profile");
-
                     b.Navigation("SecondModel");
+                });
+
+            modelBuilder.Entity("Voting.DAL.Entities.Account", b =>
+                {
+                    b.Navigation("Pairs");
                 });
 
             modelBuilder.Entity("Voting.DAL.Entities.Model", b =>
@@ -226,9 +217,9 @@ namespace Voting.DAL.Migrations
                     b.Navigation("Images");
                 });
 
-            modelBuilder.Entity("Voting.DAL.Entities.Profile", b =>
+            modelBuilder.Entity("Voting.DAL.Entities.Role", b =>
                 {
-                    b.Navigation("Pairs");
+                    b.Navigation("Accounts");
                 });
 #pragma warning restore 612, 618
         }

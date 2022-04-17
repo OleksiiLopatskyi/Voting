@@ -23,6 +23,11 @@ namespace Voting.BAL.Services
         {
             return await _unitOfWork.AccountRepository.FindAllAsync();
         }
+        public async Task<GenericResult<Account>> GetAccount(int id)
+        {
+            return new GenericResult<Account>() { Data = await _unitOfWork.AccountRepository
+                .FindEntityAsync(a=>a.Id==id) };
+        }
 
         public async Task<GenericResult<Account>> LoginAsync(LoginDto model)
         {
@@ -66,10 +71,8 @@ namespace Voting.BAL.Services
                     foundRole = new Role { Name = AccountConstants.UserRole };
                 }
 
-                var profile = new Profile { Username = model.Username };
                 var createdAccount = new AccountBuilder()
                     .WithEmail(model.Email)
-                    .WithProfile(profile)
                     .WithUsername(model.Username)
                     .WithRole(foundRole)
                     .WithPassword(model.Password)

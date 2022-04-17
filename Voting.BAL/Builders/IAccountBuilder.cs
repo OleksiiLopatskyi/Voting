@@ -7,8 +7,7 @@ namespace Voting.BAL.Builders
         public Account Account { get; }
         public IAccountBuilder WithEmail(string email);
         public IAccountBuilder WithRole(Role role);
-        public IAccountBuilder WithProfile(Profile profile);
-        public IAccountBuilder WithUsername(string password);
+        public IAccountBuilder WithUsername(string username);
         public IAccountBuilder WithPassword(string password);
         public Account Build();
     }

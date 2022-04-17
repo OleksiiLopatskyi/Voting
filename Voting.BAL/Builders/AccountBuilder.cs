@@ -31,14 +31,9 @@ namespace Voting.BAL.Builders
             _account.Password = password;
             return this;
         }
-        public IAccountBuilder WithProfile(Profile profile)
-        {
-            _account.Profile = profile;
-            return this;
-        }
         public IAccountBuilder WithUsername(string username)
         {
-            _account.Profile.Username = username;
+            _account.Username = username;
             return this;
         }
         public Account Build()

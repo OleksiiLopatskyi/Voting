@@ -12,12 +12,13 @@ namespace Voting.BAL.Services
         {
             _unitOfWork = unitOfWork;
         }
-        public async Task<Result> GetNoVotedPairAsync(int profileId)
+        public async Task<Result> GetNoVotedPairAsync(int accountId)
         {
             try
             {
-                var pair = await _unitOfWork.ModelsPairRepository.FindEntityAsync(p => p.IsVoted == false &&
-                p.ProfileId == profileId);
+                var account = await _unitOfWork.AccountRepository
+                     .FindEntityAsync(a => a.Id == accountId);
+                var pair = account.Pairs.First(p => p.IsVoted == false);
                 return new GenericResult<Pair> { Data = pair };
             }
             catch (Exception ex)
@@ -25,15 +26,16 @@ namespace Voting.BAL.Services
                 return new Result { StatusCode = StatusCode.InternalServerError };
             }
         }
-        public async Task<Result> CreateAsync(int profileId)
+        public async Task<Result> CreateAsync(int accountId)
         {
             try
             {
-                var account = await _unitOfWork.AccountRepository.FindEntityAsync(a=>a.ProfileId==profileId);
+                var account = await _unitOfWork.AccountRepository
+                    .FindEntityAsync(a => a.Id == accountId);
                 var generatedPairs = await GeneratePairsAsync();
                 foreach (var pair in generatedPairs)
                 {
-                    account.Profile.Pairs.Add(pair);
+                    account.Pairs.Add(pair);
                 }
                 await _unitOfWork.SaveAsync();
                 return new GenericResult<IEnumerable<Pair>> { Data = generatedPairs };

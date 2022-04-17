@@ -14,8 +14,10 @@ namespace Voting.DAL.Repository
         public new async Task<Account> FindEntityAsync(Expression<Func<Account, bool>> expression)
         {
             return await DataContext.Set<Account>()
-                .Include(a=>a.Profile)
-                .ThenInclude(a=>a.Pairs)
+                .Include(a=>a.Pairs)
+                .ThenInclude(p=>p.FirstModel).ThenInclude(m=>m.Images)
+                .Include(p=>p.Pairs)
+                .ThenInclude(p=>p.SecondModel).ThenInclude(m=>m.Images)
                 .Include(a=>a.Role)
                 .FirstOrDefaultAsync(expression);
         }

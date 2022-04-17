@@ -21,7 +21,7 @@ namespace Voting.API.Controllers
         [HttpGet]
         public async Task<IActionResult> getUser()
         {
-            return Ok(await _accountService.GetAll());
+            return Ok(await _accountService.GetAccount(GetAccountId()));
         }
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody]LoginDto model)
@@ -44,9 +44,9 @@ namespace Voting.API.Controllers
         {
             var claims = new List<Claim>()
                 {
-                    new Claim(ClaimsIdentity.DefaultNameClaimType, model.Profile.Username),
+                    new Claim(ClaimsIdentity.DefaultNameClaimType, model.Username),
                     new Claim(ClaimsIdentity.DefaultRoleClaimType, model.Role.Name),
-                    new Claim("Id",model.Profile.Id.ToString()),
+                    new Claim("Id",model.Id.ToString()),
                 };
             ClaimsIdentity id = new ClaimsIdentity(claims, "ApplicationCookie",
                                                    ClaimsIdentity.DefaultNameClaimType,

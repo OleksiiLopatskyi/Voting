@@ -12,7 +12,8 @@ namespace Voting.DAL.Entities
         public string Name { get; set; }
         public int VotesCount { get; set; }
         public int ShowTimes { get; set; }
-        public double Rating =>  VotesCount == 0 || ShowTimes == 0 ? 0 : (VotesCount / ShowTimes) * 5;
+        public double Rating =>
+            VotesCount == 0 || ShowTimes == 0 ? 0 : (VotesCount / ShowTimes) * 5;
         public ICollection<Image> Images { get; set; }
     }
 }
