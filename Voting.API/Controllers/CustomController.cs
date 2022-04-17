@@ -5,6 +5,10 @@ namespace Voting.API.Controllers
 {
     public class CustomController : ControllerBase
     {
+        protected int GetAccountId()
+        {
+            return Int32.Parse(User.Claims.FirstOrDefault(i => i.Type == "Id").Value);
+        }
         protected IActionResult CustomResult(Result result)
         {
             switch (result.StatusCode)

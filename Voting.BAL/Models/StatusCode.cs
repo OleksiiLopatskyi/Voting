@@ -10,6 +10,7 @@ namespace Voting.BAL.Models
     {
         Success = 0,
         NotFound = 1,
-        InternalServerError = 2
+        InternalServerError = 2,
+        BadRequest = 3
     }
 }

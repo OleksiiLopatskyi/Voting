@@ -1,5 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
+using System.Text.Json.Serialization;
 using Voting.BAL.Contracts;
 using Voting.BAL.Models;
 using Voting.BAL.Services;
@@ -27,8 +29,12 @@ namespace Voting.API
             services.AddTransient<IUnitOfWork, UnitOfWork>();
             services.AddTransient<IPairService, PairService>();
             services.AddTransient<IFireBaseClient, FireBaseClient>();
+            services.AddTransient<IAccountService, AccountService>();
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie();
             services.Configure<FireBaseOptions>(Configuration.GetSection("FireBaseStorage"));
-            services.AddControllers();
+            services.AddControllers()
+                .AddJsonOptions(x =>
+                x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Voting", Version = "v1" });
@@ -52,6 +58,7 @@ namespace Voting.API
             .AllowAnyHeader()
             .AllowAnyMethod());
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

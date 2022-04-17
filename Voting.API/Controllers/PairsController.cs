@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Voting.BAL.Contracts;
-using Voting.DAL.DTO;
+using Voting.BAL.Models;
 
 namespace Voting.API.Controllers
 {
+    [Authorize]
     [Route("api/pairs")]
     public class PairsController : CustomController
     {
@@ -12,17 +14,16 @@ namespace Voting.API.Controllers
         {
             _modelsPairService = modelsPairService;
         }
-
         [HttpGet("getPair")]
         public async Task<IActionResult> GetPair()
         {
-            var result = await _modelsPairService.GetNoVotedPairAsync();
+            var result = await _modelsPairService.GetNoVotedPairAsync(GetAccountId());
             return CustomResult(result);
         }
         [HttpPost]
         public async Task<IActionResult> CreatePairs()
         {
-            var result = await _modelsPairService.CreateAsync();
+            var result = await _modelsPairService.CreateAsync(GetAccountId());
             return CustomResult(result);
         }
         [HttpPut("vote")]

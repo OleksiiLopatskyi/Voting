@@ -3,7 +3,6 @@ using Voting.BAL.Builders;
 using Voting.BAL.Contracts;
 using Voting.BAL.Models;
 using Voting.DAL.Contracts;
-using Voting.DAL.DTO;
 using Voting.DAL.Entities;
 
 namespace Voting.BAL.Services

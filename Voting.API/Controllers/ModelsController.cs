@@ -1,7 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Voting.BAL.Contracts;
-using Voting.DAL.DTO;
 
 namespace Voting.API.Controllers
 {

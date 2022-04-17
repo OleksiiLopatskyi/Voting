@@ -4,11 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Voting.DAL.DTO
+namespace Voting.DAL.Entities
 {
-    public class ModelDto
+    public class Role
     {
+        public int Id { get; set; }
         public string Name { get; set; }
-        public IEnumerable<string> Images { get; set; }
+        public int AccountId { get; set; }
     }
 }

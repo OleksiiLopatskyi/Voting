@@ -1,13 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 using Voting.DAL.Context;
+using Voting.DAL.Contracts;
 
-namespace Voting.DAL.Contracts
+namespace Voting.DAL.Repository
 {
     public abstract class BaseRepository<T> : IBaseRepository<T> where T : class
     {

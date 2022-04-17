@@ -8,6 +8,7 @@ namespace Voting.BAL.Models
 {
     public class Result
     {
+        public string ErrorMessage { get; set; }
         public StatusCode StatusCode { get; set; }
     }
 }

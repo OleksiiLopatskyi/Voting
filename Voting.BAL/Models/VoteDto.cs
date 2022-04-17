@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Voting.DAL.DTO
+namespace Voting.BAL.Models
 {
     public class VoteDto
     {
