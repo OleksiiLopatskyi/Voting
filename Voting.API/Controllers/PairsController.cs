@@ -14,6 +14,7 @@ namespace Voting.API.Controllers
         {
             _modelsPairService = modelsPairService;
         }
+        [Authorize]
         [HttpGet("getPair")]
         public async Task<IActionResult> GetPair()
         {

@@ -8,7 +8,6 @@ namespace Voting.BAL.Contracts
         public Task<GenericResult<Account>> GetAccount(int id);
         public Task<IEnumerable<Account>> GetAll();
         public Task<GenericResult<Account>> RegisterAsync(RegisterDto model);
-        public Task<GenericResult<Account>> LoginAsync(LoginDto model);
-
+        public Task<GenericResult<string>> LoginAsync(LoginDto model);
     }
 }

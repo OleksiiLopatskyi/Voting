@@ -20,7 +20,7 @@ namespace Voting.DAL.Repository
         {
             return await DataContext.Set<Pair>()
                 .AsNoTracking()
-                .Where(p=>p.IsVoted==false)
+                .Where(expression)
                 .Include(i => i.FirstModel).ThenInclude(i => i.Images)
                 .Include(i => i.SecondModel).ThenInclude(i => i.Images)
                 .FirstOrDefaultAsync();

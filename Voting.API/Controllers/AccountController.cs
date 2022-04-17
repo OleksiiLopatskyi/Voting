@@ -31,7 +31,6 @@ namespace Voting.API.Controllers
                 return BadRequest(ModelState);
             }
             var result = await _accountService.LoginAsync(model);
-            await Authenticate(result.Data);
             return CustomResult(result);
         }
         [HttpPost("register")]
@@ -39,28 +38,6 @@ namespace Voting.API.Controllers
         {
             var result = await _accountService.RegisterAsync(model);
             return CustomResult(result);
-        }
-        private async Task Authenticate(Account model)
-        {
-            var claims = new List<Claim>()
-                {
-                    new Claim(ClaimsIdentity.DefaultNameClaimType, model.Username),
-                    new Claim(ClaimsIdentity.DefaultRoleClaimType, model.Role.Name),
-                    new Claim("Id",model.Id.ToString()),
-                };
-            ClaimsIdentity id = new ClaimsIdentity(claims, "ApplicationCookie",
-                                                   ClaimsIdentity.DefaultNameClaimType,
-                                                   ClaimsIdentity.DefaultRoleClaimType
-                                                   );
-            await HttpContext
-                .SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
-                new ClaimsPrincipal(id));
-        }
-        [HttpPost("logout")]
-        public async Task<IActionResult> Logout()
-        {
-            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            return Ok();
         }
     }
 }

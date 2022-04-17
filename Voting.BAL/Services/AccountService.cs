@@ -1,6 +1,10 @@
-﻿using System;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
+using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using Voting.BAL.Builders;
@@ -14,9 +18,11 @@ namespace Voting.BAL.Services
     public class AccountService : IAccountService
     {
         private readonly IUnitOfWork _unitOfWork;
-        public AccountService(IUnitOfWork unitOfWork)
+        private IConfiguration _configuration;
+        public AccountService(IUnitOfWork unitOfWork, IConfiguration configuration)
         {
             _unitOfWork = unitOfWork;
+            _configuration = configuration;
         }
 
         public async Task<IEnumerable<Account>> GetAll()
@@ -25,11 +31,14 @@ namespace Voting.BAL.Services
         }
         public async Task<GenericResult<Account>> GetAccount(int id)
         {
-            return new GenericResult<Account>() { Data = await _unitOfWork.AccountRepository
-                .FindEntityAsync(a=>a.Id==id) };
+            return new GenericResult<Account>()
+            {
+                Data = await _unitOfWork.AccountRepository
+                .FindEntityAsync(a => a.Id == id)
+            };
         }
 
-        public async Task<GenericResult<Account>> LoginAsync(LoginDto model)
+        public async Task<GenericResult<string>> LoginAsync(LoginDto model)
         {
             try
             {
@@ -37,22 +46,43 @@ namespace Voting.BAL.Services
                     .FindEntityAsync(a => a.Email == model.Email && a.Password == model.Password);
                 if (foundUser == null)
                 {
-                    return new GenericResult<Account>
+                    return new GenericResult<string>
                     {
                         ErrorMessage = "Incorrect Email or Password",
                         StatusCode = StatusCode.BadRequest
                     };
                 }
-                return new GenericResult<Account> { Data = foundUser };
+
+                var token = GenerateToken(foundUser);
+                return new GenericResult<string> { Data = token};
             }
             catch (Exception ex)
             {
-                return new GenericResult<Account>
+                return new GenericResult<string>
                 {
                     ErrorMessage = ex.Message,
                     StatusCode = StatusCode.InternalServerError
                 };
             }
+        }
+        private string GenerateToken(Account account)
+        {
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var tokenKey = Encoding.UTF8.GetBytes(_configuration["JWT:Key"]);
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                    Subject = new ClaimsIdentity(new Claim[]
+                    {
+                        new Claim(ClaimTypes.Name, account.Username),
+                        new Claim(ClaimTypes.Email, account.Email),
+                        new Claim(ClaimTypes.Role, account.Role.Name),
+                        new Claim("Id", account.Id.ToString())
+                    }),
+                Expires = DateTime.UtcNow.AddMinutes(10),
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(tokenKey), SecurityAlgorithms.HmacSha256Signature)
+            };
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+            return tokenHandler.WriteToken(token);
         }
         public async Task<GenericResult<Account>> RegisterAsync(RegisterDto model)
         {
@@ -66,7 +96,7 @@ namespace Voting.BAL.Services
                 {
                     return new GenericResult<Account> { ErrorMessage = "User with that is already exists" };
                 }
-                if(foundRole == null)
+                if (foundRole == null)
                 {
                     foundRole = new Role { Name = AccountConstants.UserRole };
                 }
