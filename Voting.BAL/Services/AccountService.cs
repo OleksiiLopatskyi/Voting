@@ -19,10 +19,12 @@ namespace Voting.BAL.Services
     {
         private readonly IUnitOfWork _unitOfWork;
         private IConfiguration _configuration;
-        public AccountService(IUnitOfWork unitOfWork, IConfiguration configuration)
+        private readonly IPairService _pairService;
+        public AccountService(IUnitOfWork unitOfWork, IConfiguration configuration, IPairService pairService)
         {
             _unitOfWork = unitOfWork;
             _configuration = configuration;
+            _pairService = pairService;
         }
 
         public async Task<IEnumerable<Account>> GetAll()
@@ -31,11 +33,22 @@ namespace Voting.BAL.Services
         }
         public async Task<GenericResult<Account>> GetAccount(int id)
         {
-            return new GenericResult<Account>()
+            try
             {
-                Data = await _unitOfWork.AccountRepository
+                return new GenericResult<Account>()
+                {
+                    Data = await _unitOfWork.AccountRepository
                 .FindEntityAsync(a => a.Id == id)
-            };
+                };
+            }
+            catch (Exception ex)
+            {
+                return new GenericResult<Account>
+                {
+                    ErrorMessage = ex.Message,
+                    StatusCode = StatusCode.NotFound
+                };
+            }
         }
 
         public async Task<GenericResult<string>> LoginAsync(LoginDto model)
@@ -54,7 +67,7 @@ namespace Voting.BAL.Services
                 }
 
                 var token = GenerateToken(foundUser);
-                return new GenericResult<string> { Data = token};
+                return new GenericResult<string> { Data = token };
             }
             catch (Exception ex)
             {
@@ -71,7 +84,7 @@ namespace Voting.BAL.Services
             var tokenKey = Encoding.UTF8.GetBytes(_configuration["JWT:Key"]);
             var tokenDescriptor = new SecurityTokenDescriptor
             {
-                    Subject = new ClaimsIdentity(new Claim[]
+                Subject = new ClaimsIdentity(new Claim[]
                     {
                         new Claim(ClaimTypes.Name, account.Username),
                         new Claim(ClaimTypes.Email, account.Email),
@@ -110,6 +123,7 @@ namespace Voting.BAL.Services
 
                 await _unitOfWork.AccountRepository.CreateAsync(createdAccount);
                 await _unitOfWork.SaveAsync();
+                await _pairService.CreateAsync(createdAccount.Id);
                 return new GenericResult<Account> { StatusCode = StatusCode.Success };
             }
             catch (Exception ex)

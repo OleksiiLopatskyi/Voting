@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using Voting.BAL;
@@ -13,15 +14,17 @@ namespace Voting.API.Controllers
     [Route("api/account")]
     public class AccountController : CustomController
     {
-        public IAccountService _accountService;
+        private readonly IAccountService _accountService;
         public AccountController(IAccountService accountService)
         {
             _accountService = accountService;
         }
+        [Authorize]
         [HttpGet]
-        public async Task<IActionResult> getUser()
+        public async Task<IActionResult> GetUser()
         {
-            return Ok(await _accountService.GetAccount(GetAccountId()));
+            var result = await _accountService.GetAccount(GetAccountId());
+            return CustomResult(result);
         }
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody]LoginDto model)

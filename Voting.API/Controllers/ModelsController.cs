@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Voting.BAL.Contracts;
 
 namespace Voting.API.Controllers
@@ -24,6 +25,7 @@ namespace Voting.API.Controllers
             var result = await _modelService.GetModelById(id);
             return CustomResult(result);
         }
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<IActionResult> CreateModel(IFormCollection form)
         {

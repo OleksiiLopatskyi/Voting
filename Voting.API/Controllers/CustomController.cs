@@ -7,8 +7,9 @@ namespace Voting.API.Controllers
     {
         protected int GetAccountId()
         {
-            return Int32.Parse(User.Claims.FirstOrDefault(i => i.Type == "Id").Value);
-        }
+
+            var id = Int32.Parse(User.Claims.FirstOrDefault(i => i.Type == "Id").Value);
+            return id;        }
         protected IActionResult CustomResult(Result result)
         {
             switch (result.StatusCode)
@@ -16,9 +17,9 @@ namespace Voting.API.Controllers
                 case BAL.Models.StatusCode.InternalServerError:
                     return StatusCode(StatusCodes.Status500InternalServerError);
                 case BAL.Models.StatusCode.NotFound:
-                   return NotFound(result);
+                    return NotFound(result);
                 default: return Ok(result);
             }
-        }   
+        }
     }
 }

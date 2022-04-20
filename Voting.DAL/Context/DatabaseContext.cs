@@ -16,7 +16,7 @@ namespace Voting.DAL.Context
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            string adminEmail = "admin@gmail.com";
+          /*  string adminEmail = "admin@gmail.com";
             string adminUsername = "admin";
             string adminPassword = "12345";
 
@@ -33,7 +33,7 @@ namespace Voting.DAL.Context
                 RoleId = adminRole.Id
 
             };
-            modelBuilder.Entity<Account>().HasData(account);
+            modelBuilder.Entity<Account>().HasData(account);*/
             base.OnModelCreating(modelBuilder);
         }
     }

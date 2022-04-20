@@ -11,6 +11,7 @@ namespace Voting.DAL.Contracts
     {
         Task<IEnumerable<T>> FindAllAsync();
         Task<T> FindEntityAsync(Expression<Func<T, bool>> expression);
+        Task<IEnumerable<T>> FindAllByConditionAsync(Expression<Func<T, bool>> expression);
         Task CreateAsync(T entity);
         void Update(T entity);
         void Delete(T entity);

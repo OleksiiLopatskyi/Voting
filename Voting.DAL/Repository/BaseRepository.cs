@@ -37,5 +37,10 @@ namespace Voting.DAL.Repository
         {
             return await DataContext.Set<T>().FirstOrDefaultAsync(expression); 
         }
+
+        public async Task<IEnumerable<T>> FindAllByConditionAsync(Expression<Func<T, bool>> expression)
+        {
+            return await DataContext.Set<T>().AsNoTracking().Where(expression).ToListAsync();
+        }
     }
 }

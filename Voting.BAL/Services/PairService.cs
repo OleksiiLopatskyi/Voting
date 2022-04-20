@@ -108,5 +108,15 @@ namespace Voting.BAL.Services
             }
 
         }
+
+        public async Task<Result> GetNewPairs(int accountId)
+        {
+            var newPairs = await GeneratePairsAsync();
+            var oldPairs = await _unitOfWork.ModelsPairRepository
+                .FindAllByConditionAsync(p=>p.AccountId==accountId);
+            var union = newPairs.Union(oldPairs);
+            var result = union.Distinct();
+            return new GenericResult<IEnumerable<Pair>> { Data = result };
+        }
     }
 }
