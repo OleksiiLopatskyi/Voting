@@ -4,11 +4,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Voting.BAL.Models;
 
 namespace Voting.BAL.Contracts
 {
     public interface IFireBaseClient
     {
-        Task<IEnumerable<string>> UploadImages(IFormFileCollection files);
+        Task<Result<IEnumerable<string>>> UploadImages(IEnumerable<IFormFile> files);
     }
 }

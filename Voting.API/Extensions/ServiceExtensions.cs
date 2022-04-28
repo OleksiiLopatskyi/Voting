@@ -1,9 +1,13 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Voting.BAL.Contracts;
 using Voting.BAL.Services;
+using Voting.DAL.Context;
 using Voting.DAL.Contracts;
+using Voting.DAL.Entities;
 using Voting.DAL.Repository;
 
 namespace Voting.API.Extensions
@@ -26,12 +30,24 @@ namespace Voting.API.Extensions
                     ValidateAudience = false,
                     ValidateLifetime = true,
                     ValidateIssuerSigningKey = true,
-                    ValidIssuer = configuration["JWT:Issuer"],
-                    ValidAudience = configuration["JWT:Audience"],
                     IssuerSigningKey = new SymmetricSecurityKey(Key)
                 };
             });
 
+        }
+        public static void ConfigureIdentity(this IServiceCollection services)
+        {
+            services.AddIdentity<User, IdentityRole>(options =>
+            {
+                options.Password.RequiredUniqueChars = 0;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireDigit = false;
+                options.Password.RequiredLength = 1;
+                options.Password.RequireUppercase = false;
+
+            })
+                .AddEntityFrameworkStores<DatabaseContext>()
+                .AddDefaultTokenProviders();
         }
         public static void ConfigureDependencies(this IServiceCollection services)
         {
@@ -39,7 +55,9 @@ namespace Voting.API.Extensions
             services.AddTransient<IUnitOfWork, UnitOfWork>();
             services.AddTransient<IPairService, PairService>();
             services.AddTransient<IFireBaseClient, FireBaseClient>();
-            services.AddTransient<IAccountService, AccountService>();
+            services.AddTransient<IAuthService, AuthService>();
+            services.AddTransient<IUserService, UserService>();
+            services.AddTransient<IAdminService, AdminService>();
         }
     }
 }

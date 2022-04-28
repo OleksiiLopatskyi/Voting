@@ -8,9 +8,15 @@
     },
     "mssql1": {
       "secretStore": "AzureAppSettings",
-      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.Sql/servers/votingapidbserver/databases/Voting.API_db",
+      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.Sql/servers/voting-lviv/databases/voting",
       "type": "mssql.azure",
       "connectionId": "ConnectionStrings:DefaultConnection"
+    },
+    "appInsights1": {
+      "secretStore": "AzureAppSettings",
+      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/microsoft.insights/components/voting-insights",
+      "type": "appInsights.azure",
+      "connectionId": "APPLICATIONINSIGHTS_CONNECTION_STRING"
     }
   }
 }

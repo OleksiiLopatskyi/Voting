@@ -13,45 +13,60 @@ namespace Voting.DAL.Repository
         private DatabaseContext _dataContext;
         private IModelRepository _modelRepository;
         private IPairRepository _modelsPairRepository;
-        private IAccountRepository _accountRepository;
         private IRoleRepository _roleRepository;
+        private IUserRepository _userRepository;
+        private IImageRepository _imageRepository;
         public UnitOfWork(DatabaseContext databaseContext)
         {
             _dataContext = databaseContext;
         }
-        public IRoleRepository RoleRepository {
-            get 
+
+        public IImageRepository ImageRepository
+        {
+            get
+            {
+                if (_imageRepository == null)
+                    return new ImageRepository(_dataContext);
+                return _imageRepository;
+            }
+        }
+        public IUserRepository UserRepository
+        {
+            get
+            {
+                if (_userRepository == null)
+                    _userRepository = new UserRepository(_dataContext);
+                return _userRepository;
+            }
+        }
+        public IRoleRepository RoleRepository
+        {
+            get
             {
                 if (_roleRepository == null)
                 {
-                   _roleRepository = new RoleRepository(_dataContext);
+                    _roleRepository = new RoleRepository(_dataContext);
                 }
                 return _roleRepository;
             }
         }
-        public IAccountRepository AccountRepository { 
+        public IModelRepository ModelRepository
+        {
             get
             {
-                if (_accountRepository == null)
-                    _accountRepository = new AccountRepository(_dataContext);
-                return _accountRepository;
-            } 
-        }
-        public IModelRepository ModelRepository { 
-            get
-            {
-                if(_modelRepository == null)
+                if (_modelRepository == null)
                     _modelRepository = new ModelRepository(_dataContext);
                 return _modelRepository;
             }
         }
-        public IPairRepository ModelsPairRepository { 
-            get 
+        public IPairRepository ModelsPairRepository
+        {
+            get
             {
-                if(_modelsPairRepository==null)
+                if (_modelsPairRepository == null)
                     return new PairRepository(_dataContext);
                 return _modelsPairRepository;
-            } 
+            }
         }
 
         public async Task SaveAsync()

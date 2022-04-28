@@ -9,12 +9,12 @@ namespace Voting.BAL.Builders
 {
     public class AccountBuilder : IAccountBuilder
     {
-        private Account _account;
+        private User _account;
         public AccountBuilder()
         {
-            _account = new Account();
+            _account = new User();
         }
-        public Account Account => _account;
+        public User Account => _account;
 
         public IAccountBuilder WithEmail(string email)
         {
@@ -23,20 +23,17 @@ namespace Voting.BAL.Builders
         }
         public IAccountBuilder WithRole(Role role)
         {
-            _account.Role = role;
             return this;
         }
         public IAccountBuilder WithPassword(string password)
         {
-            _account.Password = password;
             return this;
         }
         public IAccountBuilder WithUsername(string username)
         {
-            _account.Username = username;
             return this;
         }
-        public Account Build()
+        public User Build()
         {
             return _account;
         }

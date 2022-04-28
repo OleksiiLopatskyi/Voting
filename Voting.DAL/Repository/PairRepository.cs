@@ -16,10 +16,17 @@ namespace Voting.DAL.Repository
         public PairRepository(DatabaseContext databaseContext) : base(databaseContext)
         {
         }
+        public new async Task<IEnumerable<Pair>> FindAllByConditionAsync(Expression<Func<Pair, bool>> expression)
+        {
+            return await DataContext.Set<Pair>()
+                .Where(expression)
+                .Include(i => i.FirstModel).ThenInclude(m=>m.Images)
+                .Include(i => i.SecondModel).ThenInclude(m=>m.Images)
+                .ToListAsync();
+        }
         public new async Task<Pair> FindEntityAsync(Expression<Func<Pair, bool>> expression)
         {
             return await DataContext.Set<Pair>()
-                .AsNoTracking()
                 .Where(expression)
                 .Include(i => i.FirstModel).ThenInclude(i => i.Images)
                 .Include(i => i.SecondModel).ThenInclude(i => i.Images)

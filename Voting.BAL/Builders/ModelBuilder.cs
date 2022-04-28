@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Voting.BAL.Extensions;
+using Voting.BAL.Models;
 using Voting.DAL.Entities;
 
 namespace Voting.BAL.Builders
@@ -33,9 +34,9 @@ namespace Voting.BAL.Builders
             return this;
         }
 
-        public IModelBuilder Map(IFormCollection form)
+        public IModelBuilder Map(ModelDto dto)
         {
-            _model = form.FormToDictionary().ToObject<Model>();
+            _model.Name = dto.Name;
             return this;
         }
     }

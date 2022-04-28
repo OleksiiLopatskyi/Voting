@@ -7,8 +7,9 @@ namespace Voting.BAL.Contracts
     {
         Task<Result> GetAllModels();
         Task<Result> GetModelById(int id);
-        Task<Result> Create(IFormCollection form);
+        Task<Result> Create(ModelDto model);
         Task<Result> Update(ModelDto model);
+        Task<Result<IEnumerable<ModelTableDto>>> GetVotingResultAsync();
         Task<Result> DeleteAsync(int id);
     }
 }

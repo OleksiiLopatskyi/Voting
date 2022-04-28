@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Voting.DAL", "..\Voting.DAL
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Voting.BAL", "..\Voting.BAL\Voting.BAL.csproj", "{B602B124-0EA4-4DB1-9C0B-236E9938B30A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Voting.API", "..\Voting.API\Voting.API.csproj", "{EE8A97FB-537A-4150-86DE-720388B0DC45}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Voting.API", "..\Voting.API\Voting.API.csproj", "{EE8A97FB-537A-4150-86DE-720388B0DC45}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

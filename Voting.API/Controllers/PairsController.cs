@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Voting.BAL.Attributes;
 using Voting.BAL.Contracts;
 using Voting.BAL.Models;
+using Voting.DAL.Entities;
 
 namespace Voting.API.Controllers
 {
@@ -17,25 +19,30 @@ namespace Voting.API.Controllers
         [HttpGet("new-pairs")]
         public async Task<IActionResult> GetNewPairs()
         {
-            var result = await _modelsPairService.GetNewPairs(GetAccountId());
+            var result = await _modelsPairService.GetNewPairs(GetUserId());
             return CustomResult(result);
         }
+        [MyAuthorize(Role = UserRoles.User)]
         [HttpGet("getPair")]
         public async Task<IActionResult> GetPair()
         {
-            var result = await _modelsPairService.GetNoVotedPairAsync(GetAccountId());
+            var result = await _modelsPairService.GetNoVotedPairAsync(GetUserId());
             return CustomResult(result);
         }
-        [HttpPost]
-        public async Task<IActionResult> CreatePairs()
+        
+        [MyAuthorize(Role = UserRoles.User)]
+        [HttpPost("reset-votes")]
+        public async Task<IActionResult> ResetVotes()
         {
-            var result = await _modelsPairService.CreateAsync(GetAccountId());
+            var result = await _modelsPairService.ResetVotesAsync(GetUserId());
             return CustomResult(result);
         }
+
+        [MyAuthorize(Role = UserRoles.User)]
         [HttpPut("vote")]
         public async Task<IActionResult> Vote([FromBody]VoteDto dto)
         {
-            var result = await _modelsPairService.VoteAsync(dto);
+            var result = await _modelsPairService.VoteAsync(GetUserId(),dto);
             return CustomResult(result);
         }
         [HttpDelete("{id}")]

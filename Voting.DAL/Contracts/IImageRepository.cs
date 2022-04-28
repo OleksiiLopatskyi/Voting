@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Voting.DAL.Entities;
 
-namespace Voting.BAL.Models
+namespace Voting.DAL.Contracts
 {
-    public class GenericResult<T>:Result
+    public interface IImageRepository : IBaseRepository<Image>
     {
-        public T Data { get; set; }
     }
 }

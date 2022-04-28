@@ -42,5 +42,10 @@ namespace Voting.DAL.Repository
         {
             return await DataContext.Set<T>().AsNoTracking().Where(expression).ToListAsync();
         }
+
+        public void DeleteRange(IEnumerable<T> collection)
+        {
+           DataContext.Set<T>().RemoveRange(collection);
+        }
     }
 }

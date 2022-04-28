@@ -11,7 +11,7 @@ using Voting.DAL.Entities;
 
 namespace Voting.DAL.Repository
 {
-    public class ModelRepository :BaseRepository<Model>, IModelRepository
+    public class ModelRepository : BaseRepository<Model>, IModelRepository
     {
         public ModelRepository(DatabaseContext databaseContext) : base(databaseContext)
         {

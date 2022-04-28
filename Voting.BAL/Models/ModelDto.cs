@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,6 +10,6 @@ namespace Voting.BAL.Models
     public class ModelDto
     {
         public string Name { get; set; }
-        public IEnumerable<string> Images { get; set; }
+        public IFormFileCollection Images { get; set; }
     }
 }

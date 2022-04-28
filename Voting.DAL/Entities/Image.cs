@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Voting.DAL.Entities
 {
@@ -10,5 +6,7 @@ namespace Voting.DAL.Entities
     {
         public int Id { get; set; }
         public string Url { get; set; }
+        [ForeignKey("Model")]
+        public int? ModelId { get; set; }
     }
 }

@@ -16,28 +16,39 @@ namespace Voting.BAL.Services
             _fireBaseOptions = options.Value;
         }
 
-        public async Task<IEnumerable<string>> UploadImages(IFormFileCollection files)
+        public async Task<Result<IEnumerable<string>>> UploadImages(IEnumerable<IFormFile> files)
         {
             var urlCollection = new List<string>();
             var cancellationToken = new CancellationTokenSource();
             var auth = new FirebaseAuthProvider(new FirebaseConfig(_fireBaseOptions.ApiKey));
-            var signIn = await auth
+            try
+            {
+                var signIn = await auth
                 .SignInWithEmailAndPasswordAsync(_fireBaseOptions.Email, _fireBaseOptions.Password);
-            var upload = new FirebaseStorage(_fireBaseOptions.Bucket, new FirebaseStorageOptions()
-            {
-                AuthTokenAsyncFactory = () => Task.FromResult(signIn.FirebaseToken),
-                ThrowOnCancel = true
-            }).Child(Guid.NewGuid().ToString());
 
-            foreach (var file in files)
-            {
-                using (var stream = file.OpenReadStream())
+                foreach (var file in files)
                 {
-                    await upload.PutAsync(stream, cancellationToken.Token);
+                    var upload = new FirebaseStorage(_fireBaseOptions.Bucket, new FirebaseStorageOptions()
+                    {
+                        AuthTokenAsyncFactory = () => Task.FromResult(signIn.FirebaseToken),
+                        ThrowOnCancel = true
+                    }).Child(Guid.NewGuid().ToString());
+                    using (var stream = file.OpenReadStream())
+                    {
+                        await upload.PutAsync(stream, cancellationToken.Token);
+                    }
+                    urlCollection.Add(await upload.GetDownloadUrlAsync());
                 }
-                urlCollection.Add(await upload.GetDownloadUrlAsync());
+                return new Result<IEnumerable<string>> { Data = urlCollection };
             }
-            return urlCollection;
+            catch (Exception ex)
+            {
+                return new Result<IEnumerable<string>>
+                {
+                    Message = ex.Message,
+                    StatusCode = StatusCode.InternalServerError
+                };
+            }
         }
     }
 }

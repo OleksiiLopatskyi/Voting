@@ -10,8 +10,10 @@ namespace Voting.DAL.Contracts
     {
         IRoleRepository RoleRepository { get; }
         IModelRepository ModelRepository { get; }
+        IUserRepository UserRepository { get; }
         IPairRepository ModelsPairRepository { get; }
-        IAccountRepository AccountRepository { get; }
+        IImageRepository ImageRepository { get; }
+
         Task SaveAsync();
     }
 }

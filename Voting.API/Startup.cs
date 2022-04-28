@@ -1,14 +1,9 @@
-﻿using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
-using System.Text.Json.Serialization;
 using Voting.API.Extensions;
-using Voting.BAL.Contracts;
 using Voting.BAL.Models;
-using Voting.BAL.Services;
 using Voting.DAL.Context;
-using Voting.DAL.Contracts;
-using Voting.DAL.Repository;
+using Microsoft.Extensions.Configuration;
 
 namespace Voting.API
 {
@@ -24,11 +19,14 @@ namespace Voting.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            string connectionString = Configuration.GetConnectionString("DefaultConnection");
+            string connectionString = "Data Source=tcp:votinggirldbserver.database.windows.net,1433;Initial Catalog=Voting.API_db;User Id=Oleksiy@votinggirldbserver;Password=Opelastra2006";
+            //string connectionString = "Server=localhost;Database=voting;Trusted_Connection=True;";
             services.AddDbContext<DatabaseContext>(i => i.UseSqlServer(connectionString));
             services.ConfigureJwt(Configuration);
             services.ConfigureDependencies();
+            services.ConfigureIdentity();
             services.Configure<FireBaseOptions>(Configuration.GetSection("FireBaseStorage"));
+            services.AddApplicationInsightsTelemetry("8399fb34-4975-4899-a01f-7503c4eb0af2");
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
